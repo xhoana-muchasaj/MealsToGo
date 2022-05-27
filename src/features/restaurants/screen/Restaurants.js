@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components/native';
 import {
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
+import {RestaurantContext} from '../../../services/restaurants/RestaurantsContext';
 import RestaurantInfoCard from '../components/RestaurantInfoCard';
 import {Search} from '../components/Search';
 
@@ -23,6 +24,7 @@ const RestaurantList = styled(FlatList).attrs({
 
 const RestaurantsScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const {isLoading, error, restaurants} = useContext(RestaurantContext);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -41,17 +43,10 @@ const RestaurantsScreen = () => {
         <Search />
       </SearchContainer>
       <RestaurantList
-        data={[
-          {name: 1},
-          {name: 2},
-          {name: 3},
-          {name: 4},
-          {name: 5},
-          {name: 6},
-          {name: 7},
-          {name: 8},
-        ]}
-        renderItem={() => <RestaurantInfoCard />}
+        data={restaurants}
+        renderItem={({item}) => {
+          return <RestaurantInfoCard restaurant={item} />;
+        }}
         keyExtractor={item => item.name}
       />
     </SafeAreaView>
